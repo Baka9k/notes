@@ -1,2 +1,2 @@
 # notes
-Test task for Topface
+In this application you can create, edit and delete notes, and use hashtags.
