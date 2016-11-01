@@ -20,7 +20,10 @@ Notepad.prototype.addInDOM = function(container, id) {
 	
 	var notepad = addDOMNode("div", container, {"class": "notepad", id: id});
 	var newNoteContainer = addDOMNode("div", notepad, {id: "newnotecontainer"});
-	var newNote = addDOMNode("div", newNoteContainer, {"class": "newnote", id: "newnote"});
+	var newTitle = addDOMNode("div", newNoteContainer, {"class": "newtitle", id: "newtitle", contenteditable: "true", placeholder: "Title"});
+	var newNote = addDOMNode("div", newNoteContainer, {"class": "newnote", id: "newnote", contenteditable: "true", placeholder: "Take a note..."});
+	newNote.focus();
+	var newNoteButton = addDOMNode("input", newNoteContainer, {type: "button", "class": "btn-newnote", id: "newnoteButton", value: "Done"});
 	var notes = addDOMNode("div", notepad, {id: "notes"});
 	
 	this.notes.forEach(this.renderNote);
@@ -32,12 +35,43 @@ Notepad.prototype.addListeners = function() {
 	
 	var that = this;
 	
+	//Notes
 	var notes = domFind('.content');
 	for (let i = 0; i < notes.length; i++) {
 		notes[i].onclick = function() {
 			that.startNoteChanging(notes[i]);
 		}
 	}
+	
+	//Note titles
+	var titles = domFind('.title');
+	for (let i = 0; i < titles.length; i++) {
+		titles[i].onclick = function() {
+			that.startTitleChanging(titles[i]);
+			console.log(that);
+		}
+	}
+	
+	//Add note
+	domFind("#newnoteButton")[0].onclick = function() {
+		var date = Date.now();
+		var title = domFind("#newtitle")[0].innerHTML;
+		if (title == "") title = "Untitled";
+		var content = domFind("#newnote")[0].innerHTML;
+		if (content == "") return;
+		var tags = that.findTags(content);
+		var id = that.notes.length;
+		that.addNote(title, date, content, tags, id);
+	};
+	
+};
+
+
+Notepad.prototype.findTags = function(str) {
+	
+	var re = /\#[\w\d]+/g
+	var tags = re.exec(str) || [];
+	return tags;
 	
 };
 
@@ -55,9 +89,32 @@ Notepad.prototype.findNoteIndexByElement = function(element) {
 
 Notepad.prototype.startNoteChanging = function(element) {
 	
-	var noteIndex = this.findNoteIndexByElement(element.parentElement);
+	var noteIndex = this.findNoteIndexByElement(element.parentElement.parentElement);
 	
 	element.setAttribute("contenteditable", "true");
+	element.focus();
+	
+	var that = this;
+	element.onblur = function() {
+		that.notes[noteIndex].content = this.innerHTML;
+		element.setAttribute("contenteditable", "false");
+	}
+	
+};
+
+
+Notepad.prototype.startTitleChanging = function(element) {
+	
+	var noteIndex = this.findNoteIndexByElement(element.parentElement.parentElement);
+	
+	element.setAttribute("contenteditable", "true");
+	element.focus();
+	
+	var that = this;
+	element.onblur = function() {
+		that.notes[noteIndex].title = this.innerHTML;
+		element.setAttribute("contenteditable", "false");
+	}
 	
 };
 
@@ -78,17 +135,38 @@ Notepad.prototype.renderNote = function(note) {
 		return;
 	}
 	
+	var that = this; //for event listeners
+	
 	var newNote = addDOMNode("div", domFind("#notes")[0], {"class": "note"});
-	var id = addDOMNode("div", newNote, {"class": "id"});
-	id.innerHTML = note.id;
-	var title = addDOMNode("div", newNote, {"class": "title"});
-	title.innerHTML = note.title;
-	var date = addDOMNode("div", newNote, {"class": "date"});
-	date.innerHTML = note.date;
-	var content = addDOMNode("div", newNote, {"class": "content"});
-	content.innerHTML = note.content;
-	var tags = addDOMNode("div", newNote, {"class": "tags"});
-	tags.innerHTML = note.tags;
+	
+		var titleContainer = addDOMNode("div", newNote, {"class": "title-container"});
+			var id = addDOMNode("div", titleContainer, {"class": "id"});
+			id.innerHTML = note.id;
+			var title = addDOMNode("div", titleContainer, {"class": "title"});
+			title.innerHTML = note.title;
+			title.onclick = function() {
+				that.startTitleChanging(title);
+			}
+			var close = addDOMNode("div", titleContainer, {"class": "close"});
+			close.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
+			
+		var dateContainer = addDOMNode("div", titleContainer, {"class": "date-container"});
+			var date = addDOMNode("div", dateContainer, {"class": "date"});
+			date.innerHTML = note.date;
+			
+		var contentContainer = addDOMNode("div", newNote, {"class": "content-container"});
+			var content = addDOMNode("div", contentContainer, {"class": "content"});
+			content.innerHTML = note.content;
+			content.onclick = function() {
+				that.startNoteChanging(content);
+			}
+			
+		var tagsContainer = addDOMNode("div", newNote, {"class": "tags-container"});
+			var tags = addDOMNode("div", tagsContainer, {"class": "tags"});
+			for (let i = 0; i < note.tags.length; i++) {
+				var tag = addDOMNode("div", tags, {"class": "tag"});
+				tag.innerHTML = note.tags[i];
+			}
 	
 };
 
