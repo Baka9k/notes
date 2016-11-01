@@ -1,5 +1,6 @@
 function Notepad() {
 	this.notes = [];
+	this.counter = 0;
 }
 
 
@@ -60,8 +61,10 @@ Notepad.prototype.addListeners = function() {
 		var content = domFind("#newnote")[0].innerHTML;
 		if (content == "") return;
 		var tags = that.findTags(content);
-		var id = that.notes.length;
+		var id = that.counter;
+		that.counter++;
 		that.addNote(title, date, content, tags, id);
+		that.clearInputFields();
 	};
 	
 };
@@ -114,6 +117,26 @@ Notepad.prototype.startNoteChanging = function(element) {
 };
 
 
+Notepad.prototype.clearInputFields = function() {
+	
+	domFind('#newtitle')[0].innerHTML = "";
+	domFind('#newnote')[0].innerHTML = "";
+	
+};
+
+
+Notepad.prototype.deleteNote = function(element) {
+	
+	var noteElement = element.parentElement.parentElement;
+	
+	var noteIndex = this.findNoteIndexByElement(noteElement);
+	this.notes.splice(noteIndex, 1);
+	
+	noteElement.parentNode.removeChild(noteElement);
+	
+};
+
+
 Notepad.prototype.startTitleChanging = function(element) {
 	
 	var noteIndex = this.findNoteIndexByElement(element.parentElement.parentElement);
@@ -160,6 +183,9 @@ Notepad.prototype.renderNote = function(note) {
 			}
 			var close = addDOMNode("div", titleContainer, {"class": "close"});
 			close.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
+			close.onclick = function() {
+				that.deleteNote(close);
+			}
 			
 		var dateContainer = addDOMNode("div", titleContainer, {"class": "date-container"});
 			var date = addDOMNode("div", dateContainer, {"class": "date"});
