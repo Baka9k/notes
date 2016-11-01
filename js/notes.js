@@ -69,9 +69,20 @@ Notepad.prototype.addListeners = function() {
 
 Notepad.prototype.findTags = function(str) {
 	
-	var re = /\#[\w\d]+/g
-	var tags = re.exec(str) || [];
-	return tags;
+	function iterateRE(str, re, onmatch) {
+		var result
+		while((result = re.exec(str)) !== null) {
+			if (onmatch) {
+				onmatch(result[0], result);
+			}
+		}
+	}
+	
+	var tagRE = /\#[\w\dа-я]+/ig;
+	var arr = [];
+	iterateRE(str, tagRE, (str) => { arr.push(str) });
+	
+	return arr;
 	
 };
 
