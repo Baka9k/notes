@@ -94,9 +94,12 @@ table {
 /* Custom app style */
 
 body {
-    background-color: #e8e8e8;
-    font-family: Geneva, Arial, Helvetica, sans-serif;
+    font-family: 'Roboto', sans-serif;
+	color: rgba(0,0,0,.87);
+	font-size: 16px;
+	background-color: #EEEEEE;
 }
+
 
 #todolist-root {
     padding: 0px;
@@ -111,11 +114,6 @@ body {
     background-color: #ffefc2;
 }
 
-#filter:hover {
-    -webkit-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
-    box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
-}
 
 #filter-edit {
     float: left;
@@ -124,31 +122,27 @@ body {
     padding-top: 4px;
     padding-left: 3px;
     height: 30px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 [contenteditable=true]:empty:before{
     content: attr(placeholder);
     display: block; /* For Firefox */
-    color: #c3c3c3;
+    color: #aaaaaa;
 }
 
 #searchb, #clearb {
-    font-size: 30px;
+    font-size: 24px;
     border-radius: 4px;
-    background-color: #cdff00;
-    cursor: pointer;
+    padding: 3px;
+    background-color: transparent;
     float: left;
 }
 
 #clearb {
-  float: right;
-}
-
-#searchb:hover, #clearb:hover {
-    background-color: #00ff7d;
-    -webkit-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
-    box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+    float: right;
+    cursor: pointer;
 }
 
 .top-stripe {
@@ -169,56 +163,88 @@ body {
     margin-right: auto;
 }
 
+.list hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin-left: -14px;
+    margin-right: -14px;
+    width: inherit;
+}
+
+
 .list > .list-elem {
+    
+    background-color: #FFFFFF;
+    color: rgba(0,0,0,.87);
+    
+    display: block;
+    -webkit-font-smoothing: antialiased;
+    
+    overflow-x: hidden;
+    overflow-y: auto;
+    
     border-radius: 2px;
-    width: 640px;
+    -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,0.25);
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.25);
+	
+    min-width: 320px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 5px;
-    padding: 4px;
-    padding-bottom: 7px;
-    min-height: 28px;
-
-    background-color: #fafafa;
-
-    -webkit-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
-    box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+    margin-bottom: 12px;
+    margin-top: 10px;
+    padding: 14px;
+    min-height: 32px;
+    
 }
 
 .list-text {
+    
+    word-wrap: break-word;
+    -webkit-line-break: after-white-space;
+    
+    outline: none;
+	outline-color: rgba(0, 0, 0, 0.85);
+	outline-style: none;
+	outline-width: 0px;
+	-webkit-tap-highlight-color: transparent;
+    
     margin-top: 4px;
     margin-left: 0px;
     font-size: 18px;
-    word-wrap: break-word;
     padding: 2px;
     border-radius: 2px;
+    margin-bottom: 24px;
+    
 }
 
 .list-tags {
     margin-top: 4px;
     margin-left: 2px;
     font-size: 18px;
-    padding: 0;
     margin: 0;
-    padding: 7px 0 1px 0;
+    padding: 10px 0 1px 0;
+    width: 60%;
+    position: relative;
+    float: left;
+    word-wrap: break-word;
+}
+
+.tags-label {
+    width: 50px;
+    position: relative;
+    float: left;
+    padding: 10px 0 1px 0;
+    font-weight: 500;
+    color: #494949;
 }
 
 .utag {
     background-color: #d3fcd4;
     padding: 3px;
     padding-top: 1px;
-    border-radius: 2px;
-    transition: all 0.35s;
-}
-
-.utag:hover {
+    border-radius: 3px;
     cursor: pointer;
-    background-color: #93ff96;
-
-    -webkit-box-shadow: 0px 3px 15px -2px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 3px 15px -2px rgba(0,0,0,0.75);
-    box-shadow: 0px 3px 15px -2px rgba(0,0,0,0.75);
 }
 
 .list-icon {
@@ -248,4 +274,39 @@ body {
     font-size: 18px;
     flex: 3;
 }
+
+
+.action-create {
+    
+    width: 100px;
+    
+    position: relative;
+	float: right;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	
+    -webkit-user-select: none;
+    cursor: pointer;
+    outline: none!important;
+    background-color: #4285f4;
+    border: none;
+    overflow: hidden;
+    
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
+    
+}
+
+
+
 
