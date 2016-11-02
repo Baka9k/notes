@@ -20,11 +20,12 @@ Notepad.prototype.addInDOM = function(container, id) {
 	//id is id of new notepad element
 	
 	var notepad = addDOMNode("div", container, {"class": "notepad", id: id});
-	var newNoteContainer = addDOMNode("div", notepad, {id: "newnotecontainer"});
+	var newNoteContainer = addDOMNode("div", notepad, {id: "newnotecontainer", contenteditable: "false"});
 	var newTitle = addDOMNode("div", newNoteContainer, {"class": "newtitle", id: "newtitle", contenteditable: "true", placeholder: "Title"});
 	var newNote = addDOMNode("div", newNoteContainer, {"class": "newnote", id: "newnote", contenteditable: "true", placeholder: "Take a note..."});
 	newNote.focus();
-	var newNoteButton = addDOMNode("input", newNoteContainer, {type: "button", "class": "btn-newnote", id: "newnoteButton", value: "Done"});
+	var newNoteButtonContainer = addDOMNode("div", newNoteContainer, {"class": "newbtn-container", contenteditable: "false"});
+	var newNoteButton = addDOMNode("input", newNoteButtonContainer, {type: "button", "class": "btn-newnote", id: "newnoteButton", value: "Done"});
 	var notes = addDOMNode("div", notepad, {id: "notes"});
 	
 	this.notes.forEach(this.renderNote);
@@ -49,7 +50,6 @@ Notepad.prototype.addListeners = function() {
 	for (let i = 0; i < titles.length; i++) {
 		titles[i].onclick = function() {
 			that.startTitleChanging(titles[i]);
-			console.log(that);
 		}
 	}
 	
@@ -73,7 +73,7 @@ Notepad.prototype.addListeners = function() {
 Notepad.prototype.findTags = function(str) {
 	
 	function iterateRE(str, re, onmatch) {
-		var result
+		var result;
 		while((result = re.exec(str)) !== null) {
 			if (onmatch) {
 				onmatch(result[0], result);
