@@ -65,7 +65,7 @@ body {
 	-webkit-user-select: text;
 }
 
-.newtitle {
+.newtitle, .title {
 	font-weight: 500;
 }
 
@@ -110,9 +110,19 @@ body {
     transition-timing-function: ease-in-out;
 }
 
+.btn-newnote:hover {
+	background-color: #ededed;
+}
 
 
+.id {
+	display: none;
+}
 
+
+.title {
+	padding: 4px;
+}
 
 
 
