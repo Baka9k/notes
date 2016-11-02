@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="ru">
 
 
 
@@ -56,11 +56,29 @@
 <body>
 
 
-<div class="app-container" id="appContainer"></div>
+<div id="todolist-root">
+         
+     <div class="top-stripe">
+        <div id="filter">
+          <i id="searchb" class="material-icons">&#xE8B6;</i>
+          <div id="filter-edit" placeholder="Поиск по тегам"></div>
+          <i id="clearb" class="material-icons">&#xE92B;</i>
+        </div>
+     </div>
+     
+     <div class="list">
+        <div class="list-elem">
+           <div class="list-icon action-create"><i class="material-icons">&#xE148;</i></div>
+           <div class="list-text" placeholder="Введите новую заметку"></div>
+           <div class="list-tags"></div>
+        </div>
+     </div>
+         
+</div>
 
 
 <!--JS-->
-<script src="js/notes.js"></script>
+<script type="text/javascript" src="build/client.js"></script>
 <!--/JS-->
 
 </body>

@@ -1,0 +1,246 @@
+
+/* CSS Reset: */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* =========== APP ============ */
+
+/* fonts */
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(MaterialIcons-Regular.woff2) format('woff2'),
+       url(MaterialIcons-Regular.woff) format('woff'),
+       url(MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+/* Custom app style */
+
+body {
+  background-color: #e8e8e8;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+}
+
+#todolist-root {
+  padding: 0px; 
+}
+
+#filter {
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 4px;
+  width: 710px;
+  height: 30px;
+  background-color: #ffefc2;
+}
+
+#filter:hover {
+  -webkit-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+  box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+}
+
+#filter-edit {
+    float: left;
+    width: 647px;
+    font-size: 20px;
+    padding-top: 4px;
+    padding-left: 3px;
+    height: 30px;
+}
+
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: #c3c3c3; 
+}
+
+#searchb, #clearb {
+  font-size: 30px;
+  border-radius: 4px;
+  background-color: #cdff00;
+  cursor: pointer;
+  float: left;
+}
+
+#clearb {
+  float: right;
+}
+
+#searchb:hover, #clearb:hover {
+  background-color: #00ff7d;
+  -webkit-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+  box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+}
+
+.top-stripe {
+  background-color: #ffbb00;
+  height: 45px;
+  width: 100%;
+  padding-top: 15px;
+    
+  -webkit-box-shadow: 0px 3px 4px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 3px 4px -4px rgba(0,0,0,0.75);
+  box-shadow: 0px 3px 4px -4px rgba(0,0,0,0.75);
+}
+
+.list {
+  width: 720px;
+  padding: 6px 6px 1px 6px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.list > .list-elem {
+  border-radius: 2px;
+  width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  padding: 4px;
+  padding-bottom: 7px;
+  min-height: 28px;
+  
+  background-color: #fafafa;
+  
+  -webkit-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+  box-shadow: 0px 3px 15px -4px rgba(0,0,0,0.75);
+}
+
+.list-text {
+  margin-top: 4px;
+  margin-left: 0px;
+  font-size: 18px;
+  word-wrap: break-word;
+  padding: 2px;
+  border-radius: 2px;
+}
+
+.list-tags {
+  margin-top: 4px;
+  margin-left: 2px;
+  font-size: 18px;
+  padding: 0;
+  margin: 0;
+  padding: 7px 0 1px 0;
+}
+
+.utag {
+  background-color: #d3fcd4;
+  padding: 3px;
+  padding-top: 1px;
+  border-radius: 2px;
+  transition: all 0.35s;
+}
+
+.utag:hover {
+  cursor: pointer;
+  background-color: #93ff96;
+
+  -webkit-box-shadow: 0px 3px 15px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 3px 15px -2px rgba(0,0,0,0.75);
+  box-shadow: 0px 3px 15px -2px rgba(0,0,0,0.75);
+}
+
+.list-icon {
+    background-color: #fcda7a;
+    width: 26px;
+    height: 26px;
+    font-size: 18px;
+    font-style: bold;
+    padding-top: 2px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px;
+    margin-right: 4px;
+    transition: all 0.35s;
+ }
+
+.list-icon:hover {
+  cursor: pointer;
+  background-color: #ffaaa4;
+  -webkit-box-shadow: 0px 2px 14px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 2px 14px -4px rgba(0,0,0,0.75);
+  box-shadow: 0px 2px 14px -4px rgba(0,0,0,0.75);
+}
+
+.list-elem input {
+  height: 24px;
+  font-size: 18px;
+  flex: 3;
+}
+
