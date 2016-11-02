@@ -111,7 +111,8 @@ body {
     border-radius: 4px;
     width: 710px;
     height: 30px;
-    background-color: #ffefc2;
+    background-color: rgba(255, 255, 255, 0.75);
+    font-weight: 300;
 }
 
 
@@ -124,6 +125,10 @@ body {
     height: 30px;
     overflow-x: hidden;
     overflow-y: auto;
+    outline: none;
+	outline-style: none;
+	outline-width: 0px;
+	-webkit-tap-highlight-color: transparent;
 }
 
 [contenteditable=true]:empty:before{
@@ -132,8 +137,13 @@ body {
     color: #aaaaaa;
 }
 
+#filter [contenteditable=true]:empty:before{
+    color: #F9A825;
+}
+
 #searchb, #clearb {
     font-size: 24px;
+    color: #999;
     border-radius: 4px;
     padding: 3px;
     background-color: transparent;
@@ -204,7 +214,6 @@ body {
     -webkit-line-break: after-white-space;
     
     outline: none;
-	outline-color: rgba(0, 0, 0, 0.85);
 	outline-style: none;
 	outline-width: 0px;
 	-webkit-tap-highlight-color: transparent;
@@ -287,7 +296,10 @@ body {
 	
     -webkit-user-select: none;
     cursor: pointer;
-    outline: none!important;
+    outline: none;
+	outline-style: none;
+	outline-width: 0px;
+	-webkit-tap-highlight-color: transparent;
     background-color: #4285f4;
     border: none;
     overflow: hidden;
