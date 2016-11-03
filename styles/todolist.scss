@@ -117,7 +117,8 @@ body {
 
 #filter-edit {
     float: left;
-    width: 647px;
+    max-width: 600px;
+    min-width: 320px;
     font-size: 20px;
     padding-top: 4px;
     padding-left: 3px;
@@ -257,25 +258,33 @@ body {
 }
 
 .utag {
-    background-color: #d3fcd4;
+    background-color: #CCFF90;
     padding: 3px;
     padding-top: 1px;
     border-radius: 3px;
+    -webkit-transition: all 0.45s;
+    -moz-transition: all 0.45s;
+    -o-transition: all 0.45s;
+    transition: all 0.45s;
+}
+
+.list-tags .utag:hover {
+    background-color: #B2FF59;
     cursor: pointer;
 }
 
 .list-icon {
-    background-color: #fcda7a;
     width: 26px;
     height: 26px;
-    font-size: 18px;
     font-style: bold;
     padding-top: 2px;
     text-align: center;
     display: inline-block;
-    border-radius: 5px;
-    margin-right: 4px;
-    transition: all 0.35s;
+    margin-right: 2px;
+    -webkit-transition: all 0.45s;
+    -moz-transition: all 0.45s;
+    -o-transition: all 0.45s;
+    transition: all 0.45s;
  }
 
 .list-elem input {
