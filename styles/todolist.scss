@@ -112,7 +112,6 @@ body {
     width: 710px;
     height: 30px;
     background-color: rgba(255, 255, 255, 0.75);
-    font-weight: 300;
 }
 
 
@@ -139,6 +138,7 @@ body {
 
 #filter [contenteditable=true]:empty:before{
     color: #F9A825;
+    font-weight: 300;
 }
 
 #searchb, #clearb {
@@ -237,6 +237,8 @@ body {
     position: relative;
     float: left;
     word-wrap: break-word;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .tags-label {
@@ -270,14 +272,6 @@ body {
     transition: all 0.35s;
  }
 
-.list-icon:hover {
-    cursor: pointer;
-    background-color: #ffaaa4;
-    -webkit-box-shadow: 0px 2px 14px -4px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 2px 14px -4px rgba(0,0,0,0.75);
-    box-shadow: 0px 2px 14px -4px rgba(0,0,0,0.75);
-}
-
 .list-elem input {
     height: 24px;
     font-size: 18px;
@@ -294,7 +288,10 @@ body {
 	padding-top: 8px;
 	padding-bottom: 8px;
 	
-    -webkit-user-select: none;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
     cursor: pointer;
     outline: none;
 	outline-style: none;
@@ -318,6 +315,31 @@ body {
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
     
 }
+
+
+.action-edit, .action-remove {
+    
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
+    
+    cursor: pointer;
+    
+    background-color: transparent;
+    font-size: 24px;
+    color: #999;
+    border-radius: 4px;
+    padding: 3px;
+    
+    float: right;
+    
+}
+
+.action-edit:hover, .action-remove:hover {
+    background: rgba(0,0,0,0.1);
+}
+
 
 
 
