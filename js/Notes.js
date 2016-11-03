@@ -1,54 +1,88 @@
 
 import { hasProps } from 'Utilities';
 
-
 export default class Notes {
+  constructor (storageObj, storageKey='__todolist_data') {
+    this.storage = storageObj;
+    this.storageKey = storageKey;
+    // Для окончательной реализации надо сделать чтобы при каждой операции записи
+    // в хранилище записывалось JSON-представление, ну или каждые полсекунды проверялось
+    // поменялось ли что-то, и если поменялось то записывалось бы новое состояние
+    // Можно сделать что Если fromJSON - строка то она JSON-парсится и из неё загружается объект
+    this.items = [];
+    this.id = 0;
     
-    constructor (fromJSON, storageObj) {
-        this.storage = storageObj;
-        this.items = [];
-        this.id = 0;
+    if (this.storage) {
+      var _json = this.storage.getItem(this.storageKey);
+      var data;
+      try {
+        data = JSON.parse(_json);
+      } catch (e) {
+        console.log('Data loading error:',e);
+      }
+      if (data && data.hasOwnProperty('id') && data.items) {
+        Object.assign(this, data);
+        console.log('Loaded',data.items.length,'notes from storage');
+      } else {
+        console.log('No data in storage');
+      }
     }
+  }
+  
+  save() {
+    if (this.storage) {
+      var data = {id: this.id, items: this.items};
+      this.storage.setItem(this.storageKey, JSON.stringify(data));
+      console.log('Saved',data.items.length,'notes to storage');
+    }
+  }
+  
+  add(text, tags={}) {
+      var nextId = (this.id++).toString();
+      var item = {text: text, tags: tags, id: nextId};
+      this.items.unshift(item);
+      console.log('Notes:', this.items);
+      this.save();
+      return item;
+  }
+  
+  update(id, text, tags) {
+    var item = this.findById(id);
+    console.log('Update item id:',id,'with text:',text,'tags:',tags,'item found:',item);
+    if (item) {
+      item.text = text;
+      item.tags = tags;
+      this.save();
+    }
+  }
 
-    add(text, tags=[]) {
-        var nextId = this.id++;
-        var item = {text: text, tags: tags, id: nextId};
-        this.items.unshift(item);
-        return item;
-    }
+  remove(id) {
+    var filterFn = function (item) { return item.id !== id };
+    this.items = this.items.filter(filterFn);
+    this.save();
+  }
 
-    update(id, text, tags) {
-        var item = this.findById(id);
-        item.text = text;
-        item.tags = tags;
-    }
+  findById(id) {
+      for ( var i=0; i<this.items.length; i++ ) {
+          if (this.items[i].id === id) return this.items[i];
+      }
+  }
 
-    remove(id) {
-        this.items = this.items.filter(function (item) { return item.id !== id });
-    }
+  findByTags(tags) {
+      return this.items.filter( (item) => hasProps(tags, item.tags) );
+  }
 
-    findById(id) {
-        for ( var i=0; i<this.items.length; i++ ) {
-            if (this.items[i].id === id) return this.items[i];
-        }
-    }
+  filter(tags) {
+      this.filtered = this.findByTags(tags);
+      console.log('Filtering by',tags,'result:', this.filtered);
+  }
 
-    findByTags(tags) {
-        return this.items.filter( (item) => hasProps(item.tags, tags) );
-    }
+  clearFilter() {
+      this.filtered = false;
+  }
 
-    filter(tags) {
-        this.filtered = this.findByTags(tags);
-    }
-
-    clearFilter() {
-        this.filtered = false;
-    }
-
-    get() {
-        if (this.filtered) return this.filtered
-        else return this.items;
-    }
-    
+  get() {
+      if (this.filtered) return this.filtered
+      else return this.items;
+  }
 }
-

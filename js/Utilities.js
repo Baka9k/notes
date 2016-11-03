@@ -10,6 +10,7 @@ export function $() {
     }
 }
 
+// ObjTest should have every property of objSrc
 export function hasProps(objSrc, objTest) {
     var ret = true;
     Object.keys(objSrc).forEach( (prop) => {

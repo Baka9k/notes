@@ -67,53 +67,65 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var notes = new _Notes2.default();
+	var pr = console.log;
+
+	document.body.className = '';
+
+	var notes = new _Notes2.default(window.localStorage);
 
 	var noteViews = {};
 
+	window.notes = notes;
+
 	function updateVisibility(shownNoteItems) {
-	    var shownIds = new Set(shownNoteItems.map(function (item) {
-	        return item.id;
-	    }));
-	    Object.keys(noteViews).forEach(function (id) {
-	        noteViews[id].setVisibility(shownIds.has(id));
-	    });
+	  var shownIds = new Set(shownNoteItems.map(function (item) {
+	    return item.id;
+	  }));
+	  pr('shownIds', shownIds);
+	  Object.keys(noteViews).forEach(function (id) {
+	    pr(id, shownIds.has(id));
+	    noteViews[id].setVisibility(shownIds.has(id));
+	  });
 	}
 
 	function createNoteView(item) {
-	    return new _NoteView2.default(item.text, item.tags, item.id, function onUpdateComplete(id, text, tags) {
-	        notes.update(id, text, tags);
-	    }, function onDelete(id) {
-	        notes.remove(id);
-	        delete noteViews[id];
-	    }, function onTagClick(id, tag) {
-	        searchBar.addTag(tag);
-	    });
+	  return new _NoteView2.default(item.text, item.tags, item.id, function onUpdateComplete(id, text, tags) {
+	    notes.update(id, text, tags);
+	  }, function onDelete(id) {
+	    notes.remove(id);
+	    delete noteViews[id];
+	  }, function onTagClick(id, tag) {
+	    searchBar.addTag(tag);
+	  });
 	}
 
 	var searchBar = new _SearchBar2.default((0, _Utilities.$)('#filter-edit')[0], (0, _Utilities.$)('#searchb')[0], (0, _Utilities.$)('#clearb')[0], function onTagUpdate(tags) {
-	    if (tags.length === 0) {
-	        notes.clearFilter();
-	    } else {
-	        notes.filter(tags);
-	    }
-	    updateVisibility(notes.get());
+	  if (Object.keys(tags).length === 0) {
+	    notes.clearFilter();
+	  } else {
+	    notes.filter(tags);
+	  }
+	  updateVisibility(notes.get());
 	});
 
 	new _NoteCreator2.default((0, _Utilities.$)('.list-elem:nth-child(1) > .action-create')[0], (0, _Utilities.$)('.list-elem:nth-child(1) > .list-text')[0], (0, _Utilities.$)('.list-elem:nth-child(1) > .list-tags')[0], function onNewNote(noteText, noteTags) {
+	  pr('New note created:', noteText, noteTags);
 
-	    var item = notes.add(noteText, noteTags);
-	    var note = createNoteView(item);
-	    note.renderToList(noteListDOM, (0, _Utilities.$)('.list-elem:nth-child(1)')[0]);
-	    noteViews[item.id] = note;
+	  var item = notes.add(noteText, noteTags);
+	  var note = createNoteView(item);
+
+	  note.renderToList(noteListDOM, (0, _Utilities.$)('.list-elem:nth-child(1)')[0]);
+	  noteViews[item.id] = note;
 	});
 
 	var noteListDOM = (0, _Utilities.$)('#todolist-root > .list')[0];
 
 	notes.get().forEach(function (item) {
-	    var note = createNoteView(item);
-	    note.renderToList(noteListDOM);
-	    noteViews[item.id] = note;
+
+	  var note = createNoteView(item);
+
+	  note.renderToList(noteListDOM);
+	  noteViews[item.id] = note;
 	});
 
 /***/ },
@@ -516,7 +528,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -526,70 +538,108 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Notes = function () {
-	    function Notes(fromJSON, storageObj) {
-	        _classCallCheck(this, Notes);
+	  function Notes(storageObj) {
+	    var storageKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '__todolist_data';
 
-	        this.storage = storageObj;
-	        this.items = [];
-	        this.id = 0;
+	    _classCallCheck(this, Notes);
+
+	    this.storage = storageObj;
+	    this.storageKey = storageKey;
+
+	    this.items = [];
+	    this.id = 0;
+
+	    if (this.storage) {
+	      var _json = this.storage.getItem(this.storageKey);
+	      var data;
+	      try {
+	        data = JSON.parse(_json);
+	      } catch (e) {
+	        console.log('Data loading error:', e);
+	      }
+	      if (data && data.hasOwnProperty('id') && data.items) {
+	        Object.assign(this, data);
+	        console.log('Loaded', data.items.length, 'notes from storage');
+	      } else {
+	        console.log('No data in storage');
+	      }
 	    }
+	  }
 
-	    _createClass(Notes, [{
-	        key: 'add',
-	        value: function add(text) {
-	            var tags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+	  _createClass(Notes, [{
+	    key: 'save',
+	    value: function save() {
+	      if (this.storage) {
+	        var data = { id: this.id, items: this.items };
+	        this.storage.setItem(this.storageKey, JSON.stringify(data));
+	        console.log('Saved', data.items.length, 'notes to storage');
+	      }
+	    }
+	  }, {
+	    key: 'add',
+	    value: function add(text) {
+	      var tags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-	            var nextId = this.id++;
-	            var item = { text: text, tags: tags, id: nextId };
-	            this.items.unshift(item);
-	            return item;
-	        }
-	    }, {
-	        key: 'update',
-	        value: function update(id, text, tags) {
-	            var item = this.findById(id);
-	            item.text = text;
-	            item.tags = tags;
-	        }
-	    }, {
-	        key: 'remove',
-	        value: function remove(id) {
-	            this.items = this.items.filter(function (item) {
-	                return item.id !== id;
-	            });
-	        }
-	    }, {
-	        key: 'findById',
-	        value: function findById(id) {
-	            for (var i = 0; i < this.items.length; i++) {
-	                if (this.items[i].id === id) return this.items[i];
-	            }
-	        }
-	    }, {
-	        key: 'findByTags',
-	        value: function findByTags(tags) {
-	            return this.items.filter(function (item) {
-	                return (0, _Utilities.hasProps)(item.tags, tags);
-	            });
-	        }
-	    }, {
-	        key: 'filter',
-	        value: function filter(tags) {
-	            this.filtered = this.findByTags(tags);
-	        }
-	    }, {
-	        key: 'clearFilter',
-	        value: function clearFilter() {
-	            this.filtered = false;
-	        }
-	    }, {
-	        key: 'get',
-	        value: function get() {
-	            if (this.filtered) return this.filtered;else return this.items;
-	        }
-	    }]);
+	      var nextId = (this.id++).toString();
+	      var item = { text: text, tags: tags, id: nextId };
+	      this.items.unshift(item);
+	      console.log('Notes:', this.items);
+	      this.save();
+	      return item;
+	    }
+	  }, {
+	    key: 'update',
+	    value: function update(id, text, tags) {
+	      var item = this.findById(id);
+	      console.log('Update item id:', id, 'with text:', text, 'tags:', tags, 'item found:', item);
+	      if (item) {
+	        item.text = text;
+	        item.tags = tags;
+	        this.save();
+	      }
+	    }
+	  }, {
+	    key: 'remove',
+	    value: function remove(id) {
+	      var filterFn = function filterFn(item) {
+	        return item.id !== id;
+	      };
+	      this.items = this.items.filter(filterFn);
+	      this.save();
+	    }
+	  }, {
+	    key: 'findById',
+	    value: function findById(id) {
+	      for (var i = 0; i < this.items.length; i++) {
+	        if (this.items[i].id === id) return this.items[i];
+	      }
+	    }
+	  }, {
+	    key: 'findByTags',
+	    value: function findByTags(tags) {
+	      return this.items.filter(function (item) {
+	        return (0, _Utilities.hasProps)(tags, item.tags);
+	      });
+	    }
+	  }, {
+	    key: 'filter',
+	    value: function filter(tags) {
+	      this.filtered = this.findByTags(tags);
+	      console.log('Filtering by', tags, 'result:', this.filtered);
+	    }
+	  }, {
+	    key: 'clearFilter',
+	    value: function clearFilter() {
+	      this.filtered = false;
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get() {
+	      if (this.filtered) return this.filtered;else return this.items;
+	    }
+	  }]);
 
-	    return Notes;
+	  return Notes;
 	}();
 
 	exports.default = Notes;
@@ -601,7 +651,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -617,45 +667,61 @@
 	var tagRE = /\#[\w\dа-я]+/ig;
 
 	var SearchBar = function () {
-	    function SearchBar(domDiv, domSearchB, domClearB, onTagUpdate) {
-	        var _this = this;
+	  function SearchBar(domDiv, domSearchB, domClearB, onTagUpdate) {
+	    var _this = this;
 
-	        _classCallCheck(this, SearchBar);
+	    _classCallCheck(this, SearchBar);
 
-	        this.editable = domDiv;
-	        this.clearB = domClearB;
-	        this.tags = [];
-	        var that = this;
+	    this.editable = domDiv;
+	    this.clearB = domClearB;
+	    this.tags = {};
+	    this.onTagUpdate = onTagUpdate;
 
-	        this.editor = new _DivEditor2.default({
-	            domNode: domDiv,
-	            transformText: function transformText(text) {
-	                that.tags = [];
-	                var tagsHTML = text.replace(tagRE, function (tag) {
-	                    that.tags.push(tag);
-	                    return '<span class="utag">' + tag + '</span>';
-	                });
-	                _this.onTagUpdate && _this.onTagUpdate(tags);
-	                return tagsHTML;
-	            }
+	    var that = this;
+
+	    this.editor = new _DivEditor2.default({
+	      domNode: domDiv,
+	      transformText: function transformText(text) {
+	        that.tags = {};
+	        var tagsHTML = text.replace(tagRE, function (tag) {
+	          that.tags[tag] = true;
+	          return '<span class="utag">' + tag + '</span>';
 	        });
+	        that.onTagUpdate && that.onTagUpdate(that.tags);
+	        return tagsHTML;
+	      }
+	    });
 
-	        this.onTagUpdate = onTagUpdate;
-	    }
+	    domClearB.onclick = function () {
+	      _this.tags = {};
+	      _this.editable.innerHTML = '';
+	      _this.onTagUpdate && _this.onTagUpdate(_this.tags);
+	    };
 
-	    _createClass(SearchBar, [{
-	        key: 'addTag',
-	        value: function addTag(tag) {
-	            this.tags.push(tag);
-	            if (this.editable.innerHTML.length) {
-	                this.editable.innerHTML += '&nbsp';
-	            }
-	            this.editable.innerHTML += '<span class="utag">' + tag + '</span>';
-	            this.onTagUpdate && this.onTagUpdate(this.tags);
+	    this.editable.onclick = function (event) {
+	      if (event.target && event.target.className === 'utag') {
+	        that.editable.removeChild(event.target);
+	        that.editor.triggerTransform();
+	        that.onTagUpdate && that.onTagUpdate(this.tags);
+	      }
+	    };
+	  }
+
+	  _createClass(SearchBar, [{
+	    key: 'addTag',
+	    value: function addTag(tag) {
+	      if (!this.tags[tag]) {
+	        this.tags[tag] = true;
+	        if (this.editable.innerHTML.length) {
+	          this.editable.innerHTML += '&nbsp';
 	        }
-	    }]);
+	        this.editable.innerHTML += '<span class="utag">' + tag + '</span>';
+	        this.onTagUpdate && this.onTagUpdate(this.tags);
+	      }
+	    }
+	  }]);
 
-	    return SearchBar;
+	  return SearchBar;
 	}();
 
 	exports.default = SearchBar;
@@ -667,7 +733,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -677,78 +743,82 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var DivEditor = function () {
-	    function DivEditor(config) {
-	        _classCallCheck(this, DivEditor);
+	  function DivEditor(config) {
+	    _classCallCheck(this, DivEditor);
 
-	        this.node = config.domNode;
-	        this.onedit = config.onEdit;
+	    this.node = config.domNode;
+	    this.onedit = config.onEdit;
 
-	        this.node.setAttribute('contenteditable', 'true');
-	        this.node.setAttribute('spellcheck', 'false');
+	    this.node.setAttribute('contenteditable', 'true');
+	    this.node.setAttribute('spellcheck', 'false');
 
-	        var that = this;
+	    var that = this;
 
-	        this.transformText = config.transformText;
-	        this.awaitingTransform = false;
-	        this.transformLatency = 50;
-	        this.lastText = '';
+	    this.transformText = config.transformText;
+	    this.awaitingTransform = false;
+	    this.transformLatency = 50;
+	    this.lastText = '';
 
-	        this.oneditCb = function (event) {
+	    this.oneditCb = function (event) {
+	      that.onEdit && that.onEdit.call(that, that.node.textContent);
 
-	            that.onEdit && that.onEdit.call(that, that.node.textContent);
-
-	            if (that.transformText && !that.awaitingTransform) {
-	                that.awaitingTransform = true;
-	                that.timeout = setTimeout(function () {
-	                    var text = that.node.textContent;
-	                    if (text != that.lastText) {
-	                        var offset = (0, _DomHelpers.getCaretCharacterOffsetWithin)(that.node);
-	                        var ret = that.transformText(text);
-	                        if (ret !== undefined) {
-	                            that.node.innerHTML = ret;
-	                        }
-	                        (0, _DomHelpers.setCaretPosition)(that.node, offset);
-	                        that.lastText = text;
-	                        that.awaitingTransform = false;
-	                    }
-	                }, that.transformLatency);
+	      if (that.transformText && !that.awaitingTransform) {
+	        that.awaitingTransform = true;
+	        that.timeout = setTimeout(function () {
+	          var text = that.node.textContent;
+	          if (text != that.lastText) {
+	            var offset = (0, _DomHelpers.getCaretCharacterOffsetWithin)(that.node);
+	            var ret = that.transformText(text);
+	            if (ret !== undefined) {
+	              that.node.innerHTML = ret;
 	            }
-	        };
+	            (0, _DomHelpers.setCaretPosition)(that.node, offset);
+	            that.lastText = text;
+	            that.awaitingTransform = false;
+	          }
+	        }, that.transformLatency);
+	      }
+	    };
 
-	        this.node.addEventListener('input', this.oneditCb);
+	    this.node.addEventListener('input', this.oneditCb);
 
-	        this.detachOnBlur = config.detachOnBlur;
+	    this.detachOnBlur = config.detachOnBlur;
 
-	        if (this.detachOnBlur) {
-	            this.node.onblur = function () {
-	                that.timeout && clearTimeout(that.timeout);
-	                var text = that.node.textContent;
-	                that.detach();
-	                that.detachOnBlur.call(that.node, text);
-	            };
-	        }
+	    if (this.detachOnBlur) {
+	      this.node.onblur = function () {
+	        that.timeout && clearTimeout(that.timeout);
+	        var text = that.node.textContent;
+	        that.detach();
+	        that.detachOnBlur.call(that.node, text);
+	      };
 	    }
+	  }
 
-	    _createClass(DivEditor, [{
-	        key: 'getText',
-	        value: function getText() {
-	            return this.node.textContent;
-	        }
-	    }, {
-	        key: 'clearText',
-	        value: function clearText() {
-	            this.node.innerHTML = '';
-	        }
-	    }, {
-	        key: 'detach',
-	        value: function detach() {
-	            this.node.removeEventListener('input', this.oneditCb);
-	            this.node.setAttribute('contenteditable', 'false');
-	            this.interval && clearInterval(this.interval);
-	        }
-	    }]);
+	  _createClass(DivEditor, [{
+	    key: 'triggerTransform',
+	    value: function triggerTransform() {
+	      this.oneditCb();
+	    }
+	  }, {
+	    key: 'getText',
+	    value: function getText() {
+	      return this.node.textContent;
+	    }
+	  }, {
+	    key: 'clearText',
+	    value: function clearText() {
+	      this.node.innerHTML = '';
+	    }
+	  }, {
+	    key: 'detach',
+	    value: function detach() {
+	      this.node.removeEventListener('input', this.oneditCb);
+	      this.node.setAttribute('contenteditable', 'false');
+	      this.interval && clearInterval(this.interval);
+	    }
+	  }]);
 
-	    return DivEditor;
+	  return DivEditor;
 	}();
 
 	exports.default = DivEditor;
@@ -761,70 +831,66 @@
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	exports.getCaretCharacterOffsetWithin = getCaretCharacterOffsetWithin;
 	exports.setCaretPosition = setCaretPosition;
 	function getCaretCharacterOffsetWithin(element) {
-
-	    var caretOffset = 0;
-	    var doc = element.ownerDocument || element.document || document;
-	    var win = doc.defaultView || doc.parentWindow || window;
-	    var sel;
-
-	    if (typeof win.getSelection != "undefined") {
-	        sel = win.getSelection();
-	        if (sel.rangeCount > 0) {
-	            var range = win.getSelection().getRangeAt(0);
-	            var preCaretRange = range.cloneRange();
-	            preCaretRange.selectNodeContents(element);
-	            preCaretRange.setEnd(range.endContainer, range.endOffset);
-	            caretOffset = preCaretRange.toString().length;
-	        }
-	    } else if ((sel = doc.selection) && sel.type != "Control") {
-	        var textRange = sel.createRange();
-	        var preCaretTextRange = doc.body.createTextRange();
-	        preCaretTextRange.moveToElementText(element);
-	        preCaretTextRange.setEndPoint("EndToEnd", textRange);
-	        caretOffset = preCaretTextRange.text.length;
+	  var caretOffset = 0;
+	  var doc = element.ownerDocument || element.document || document;
+	  var win = doc.defaultView || doc.parentWindow || window;
+	  var sel;
+	  if (typeof win.getSelection != "undefined") {
+	    sel = win.getSelection();
+	    if (sel.rangeCount > 0) {
+	      var range = win.getSelection().getRangeAt(0);
+	      var preCaretRange = range.cloneRange();
+	      preCaretRange.selectNodeContents(element);
+	      preCaretRange.setEnd(range.endContainer, range.endOffset);
+	      caretOffset = preCaretRange.toString().length;
 	    }
-
-	    return caretOffset;
+	  } else if ((sel = doc.selection) && sel.type != "Control") {
+	    var textRange = sel.createRange();
+	    var preCaretTextRange = doc.body.createTextRange();
+	    preCaretTextRange.moveToElementText(element);
+	    preCaretTextRange.setEndPoint("EndToEnd", textRange);
+	    caretOffset = preCaretTextRange.text.length;
+	  }
+	  return caretOffset;
 	};
 
 	function setCaretPosition(element, offset) {
+	  var range = document.createRange();
+	  var sel = window.getSelection();
 
-	    var range = document.createRange();
-	    var sel = window.getSelection();
+	  var currentNode = null;
+	  var previousNode = null;
 
-	    var currentNode = null;
-	    var previousNode = null;
+	  for (var i = 0; i < element.childNodes.length; i++) {
 
-	    for (var i = 0; i < element.childNodes.length; i++) {
+	    previousNode = currentNode;
 
-	        previousNode = currentNode;
+	    currentNode = element.childNodes[i];
 
-	        currentNode = element.childNodes[i];
-
-	        while (currentNode.childNodes.length > 0) {
-	            currentNode = currentNode.childNodes[0];
-	        }
-
-	        if (previousNode != null) {
-	            offset -= previousNode.length;
-	        }
-
-	        if (offset <= currentNode.length) {
-	            break;
-	        }
+	    while (currentNode.childNodes.length > 0) {
+	      currentNode = currentNode.childNodes[0];
 	    }
 
-	    if (currentNode != null) {
-	        range.setStart(currentNode, offset);
-	        range.collapse(true);
-	        sel.removeAllRanges();
-	        sel.addRange(range);
+	    if (previousNode != null) {
+	      offset -= previousNode.length;
 	    }
+
+	    if (offset <= currentNode.length) {
+	      break;
+	    }
+	  }
+
+	  if (currentNode != null) {
+	    range.setStart(currentNode, offset);
+	    range.collapse(true);
+	    sel.removeAllRanges();
+	    sel.addRange(range);
+	  }
 	};
 
 /***/ },
@@ -834,7 +900,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _DivEditor = __webpack_require__(12);
@@ -847,39 +913,41 @@
 
 	var tagRE = /\#[\w\dа-я]+/ig;
 
+	function renderTags(tags) {
+	  return Object.keys(tags).map(function (t) {
+	    return '<span class="utag">' + t + '</span>';
+	  }).join(' ');
+	}
+
 	var NoteCreator = function NoteCreator(domCreateB, domText, domTags, onNewNote) {
-	    _classCallCheck(this, NoteCreator);
+	  _classCallCheck(this, NoteCreator);
 
-	    this.tags = [];
-	    this.domTags = domTags;
-	    this.onNewNote = onNewNote;
-	    var that = this;
+	  this.tags = {};
+	  this.domTags = domTags;
+	  this.onNewNote = onNewNote;
+	  var that = this;
 
-	    this.editor = new _DivEditor2.default({
-	        domNode: domText,
-	        transformText: function transformText(text) {
-	            that.tags = [];
-	            var tagsHTML = text.replace(tagRE, function (tag) {
-	                that.tags.push(tag);
-	                return '<span class="utag">' + tag + '</span>';
-	            });
-	            if (that.tags.length) {
-	                that.domTags.innerHTML = that.tags.map(function (t) {
-	                    return '<span class="utag">' + t + '</span>';
-	                }).join(' ');
-	            }
-	            return tagsHTML;
-	        }
-	    });
+	  this.editor = new _DivEditor2.default({
+	    domNode: domText,
+	    transformText: function transformText(text) {
+	      that.tags = {};
+	      var tagsHTML = text.replace(tagRE, function (tag) {
+	        that.tags[tag] = true;
+	        return '<span class="utag">' + tag + '</span>';
+	      });
+	      that.domTags.innerHTML = renderTags(that.tags);
+	      return tagsHTML;
+	    }
+	  });
 
-	    domCreateB.onclick = function () {
-	        var text = that.editor.getText().trim();
-	        if (text) {
-	            that.editor.clearText();
-	            that.domTags.innerHTML = '';
-	            that.onNewNote && that.onNewNote(text, that.tags);
-	        }
-	    };
+	  domCreateB.onclick = function () {
+	    var text = that.editor.getText().trim();
+	    if (text) {
+	      that.editor.clearText();
+	      that.domTags.innerHTML = '';
+	      that.onNewNote && that.onNewNote(text, that.tags);
+	    }
+	  };
 	};
 
 	exports.default = NoteCreator;
@@ -891,12 +959,14 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _Utilities = __webpack_require__(9);
+
+	var _DomHelpers = __webpack_require__(13);
 
 	var _DivEditor = __webpack_require__(12);
 
@@ -907,105 +977,110 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function noteTemplate(text, tags) {
-	    return '<div class="list-icon action-remove"><i class="material-icons">&#xE92B;</i></div>\n            <div class="list-icon action-edit"><i class="material-icons">&#xE254;</i></div>\n            <div class="list-text">' + text + '</div>\n            <div class="list-tags">' + tags + '</div>';
+	  return '<div class="list-icon action-remove"><i class="material-icons">&#xE92B;</i></div>\n        <div class="list-icon action-edit"><i class="material-icons">&#xE254;</i></div>\n        <div class="list-text">' + text + '</div>\n        <div class="list-tags">' + tags + '</div>';
 	}
 
 	var tagRE = /\#[\w\dа-я]+/ig;
 
 	function renderTags(tags) {
-	    return tags.map(function (t) {
-	        return '<span class="utag">' + t + '</span>';
-	    }).join(' ');
+	  return Object.keys(tags).map(function (t) {
+	    return '<span class="utag">' + t + '</span>';
+	  }).join(' ');
 	}
 
 	function iterateRE(str, re, onmatch) {
-	    var result;
-	    while ((result = re.exec(str)) !== null) {
-	        if (onmatch) {
-	            onmatch(result[0], result);
-	        }
+	  var result;
+	  while ((result = re.exec(str)) !== null) {
+	    if (onmatch) {
+	      onmatch(result[0], result);
 	    }
+	  }
 	}
 
 	var NoteView = function () {
-	    function NoteView(text, tags, id, onUpdateComplete, onDelete, onTagClick) {
-	        _classCallCheck(this, NoteView);
+	  function NoteView(text, tags, id, onUpdateComplete, onDelete, onTagClick) {
+	    _classCallCheck(this, NoteView);
 
-	        this.text = text;
-	        this.tags = tags;
-	        this.id = id;
-	        this.onUpdateComplete = onUpdateComplete;
-	        this.onDelete = onDelete;
-	        this.onTagClick = onTagClick;
-	    }
+	    this.text = text;
+	    this.tags = tags;
+	    this.id = id;
+	    this.onUpdateComplete = onUpdateComplete;
+	    this.onDelete = onDelete;
+	    this.onTagClick = onTagClick;
+	  }
 
-	    _createClass(NoteView, [{
-	        key: 'renderToList',
-	        value: function renderToList(domList, insertAfterDOM) {
+	  _createClass(NoteView, [{
+	    key: 'renderToList',
+	    value: function renderToList(domList, insertAfterDOM) {
+	      var domNode = document.createElement('div');
+	      this.domNode = domNode;
+	      this.domList = domList;
 
-	            var domNode = document.createElement('div');
-	            this.domNode = domNode;
-	            this.domList = domList;
+	      domNode.className = 'list-elem';
+	      domNode.innerHTML = noteTemplate(this.text.replace(tagRE, function (tag) {
+	        return '<span class="utag">' + tag + '</span>';
+	      }), renderTags(this.tags));
 
-	            domNode.className = 'list-elem';
-	            domNode.innerHTML = noteTemplate(this.text.replace(tagRE, function (tag) {
+	      this.domText = (0, _Utilities.$)(domNode, '.list-text')[0];
+
+	      this.domTags = (0, _Utilities.$)(domNode, '.list-tags')[0];
+
+	      var that = this;
+
+	      (0, _Utilities.$)(domNode, '.action-remove')[0].onclick = function () {
+	        that.domNode && that.domList.removeChild(that.domNode);
+	        that.onDelete && that.onDelete(that.id);
+	      };
+
+	      (0, _Utilities.$)(domNode, '.action-edit')[0].onclick = function () {
+	        if (!that.editor) {
+	          that.editor = new _DivEditor2.default({
+	            domNode: that.domText,
+	            transformText: function transformText(text) {
+	              that.tags = {};
+	              var tagsHTML = text.replace(tagRE, function (tag) {
+	                that.tags[tag] = true;
 	                return '<span class="utag">' + tag + '</span>';
-	            }), renderTags(this.tags));
-
-	            this.domText = (0, _Utilities.$)(domNode, '.list-text')[0];
-
-	            this.domTags = (0, _Utilities.$)(domNode, '.list-tags')[0];
-
-	            var that = this;
-
-	            (0, _Utilities.$)(domNode, '.action-remove')[0].onclick = function () {
-	                that.domNode && that.domList.removeChild(that.domNode);
-	            };
-
-	            (0, _Utilities.$)(domNode, '.action-edit')[0].onclick = function () {
-	                that.editor = new _DivEditor2.default({
-	                    domNode: that.domText,
-	                    transformText: function transformText(text) {
-	                        that.tags = [];
-	                        var tagsHTML = text.replace(tagRE, function (tag) {
-	                            that.tags.push(tag);
-	                            return '<span class="utag">' + tag + '</span>';
-	                        });
-	                        if (that.tags.length) {
-	                            that.domTags.innerHTML = renderTags(that.tags);
-	                        }
-	                        return tagsHTML;
-	                    },
-	                    detachOnBlur: function detachOnBlur(domNode, text) {
-	                        var tags = [];
-	                        iterateRE(text, tagRE, function (tag) {
-	                            tags.push(tag);
-	                        });
-	                        that.onUpdateComplete && that.onUpdateComplete(that.id, text, tags);
-	                    }
-	                });
-	            };
-
-	            (0, _Utilities.$)(domNode, '.list-tags')[0].onclick = function (event) {
-	                if (event.target && event.target.className === 'utag') {
-	                    that.onTagClick && that.onTagClick(that.id, event.target.innerHTML);
-	                }
-	            };
-
-	            if (insertAfterDOM) {
-	                domList.insertBefore(domNode, insertAfterDOM.nextSibling);
-	            } else {
-	                domList.appendChild(domNode);
+	              });
+	              that.domTags.innerHTML = renderTags(that.tags);
+	              return tagsHTML;
+	            },
+	            detachOnBlur: function detachOnBlur(text) {
+	              that.tags = {};
+	              iterateRE(text, tagRE, function (tag) {
+	                that.tags[tag] = true;
+	              });
+	              console.log('NoteView finished editing, tags:', that.tags);
+	              that.onUpdateComplete && that.onUpdateComplete(that.id, text, that.tags);
+	              delete that.editor;
 	            }
+	          });
 	        }
-	    }, {
-	        key: 'setVisibility',
-	        value: function setVisibility(bool) {
-	            this.domNode && (this.domNode.style.display = bool ? 'block' : 'none');
-	        }
-	    }]);
+	        setTimeout(function () {
+	          that.domText.focus();(0, _DomHelpers.setCaretPosition)(that.domText, 0);
+	        }, 10);
+	      };
 
-	    return NoteView;
+	      (0, _Utilities.$)(domNode, '.list-tags')[0].onclick = function (event) {
+	        if (event.target && event.target.className === 'utag') {
+	          that.onTagClick && that.onTagClick(that.id, event.target.innerHTML);
+	        }
+	      };
+
+	      if (insertAfterDOM) {
+	        domList.insertBefore(domNode, insertAfterDOM.nextSibling);
+	      } else {
+	        domList.appendChild(domNode);
+	      }
+	    }
+	  }, {
+	    key: 'setVisibility',
+	    value: function setVisibility(bool) {
+	      this.domNode && (this.domNode.style.display = bool ? 'block' : 'none');
+	    }
+	  }]);
+
+	  return NoteView;
 	}();
 
 	exports.default = NoteView;
