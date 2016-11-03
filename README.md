@@ -4,6 +4,9 @@ This application allows you to keep your notes organized.
 * Use tags to organize your data.  
 * Filter items by entering the tags into search bar.  
 
+## Demo
+[https://baka9k.github.io/notes/](https://baka9k.github.io/notes/)
+
 ## Development
 The application uses only HTML5 DOM API and ES6 JavaScript.    
 Notes are stored in HTML5 localStorage (if available).  
@@ -26,7 +29,7 @@ npm run build
 ```
 
 ## How to run end-to-end tests
-In notes directory, type this command and observe how chrome windows opens and runs full test suite
+In notes directory, type this command and observe how chrome window opens and runs full test suite
 ```
 npm test
 ```
