@@ -17,6 +17,7 @@ export default class SearchBar {
     this.editor = new DivEditor({
       domNode: domDiv,
       transformText: (text) => {
+        //console.log('transformText:', text);
         that.tags = {};
         const tagsHTML = text.replace(tagRE, function (tag) {
           that.tags[tag] = true;
@@ -35,11 +36,10 @@ export default class SearchBar {
     }
     
     // Clicking on tag triggers removal of tag and onTagUpdate()
-    this.editable.onclick = function (event) {
+    this.editable.onclick = (event) => {
       if (event.target && event.target.className === 'utag') {
         that.editable.removeChild(event.target);
         that.editor.triggerTransform();
-        that.onTagUpdate && that.onTagUpdate(this.tags);
       }
     }
     
@@ -50,7 +50,7 @@ export default class SearchBar {
       this.tags[tag] = true;
       if (this.editable.innerHTML.length) { this.editable.innerHTML += '&nbsp' }
       this.editable.innerHTML += '<span class="utag">'+tag+'</span>'
-      this.onTagUpdate && this.onTagUpdate(this.tags);
+      this.editor.triggerTransform();
     }
   }
 }

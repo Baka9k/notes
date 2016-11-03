@@ -9,7 +9,7 @@
     "dev": "node_modules/.bin/webpack -w"
   },
   "author": "Mikhail S.",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "dependencies": {
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",

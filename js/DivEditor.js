@@ -38,7 +38,11 @@ export default class DivEditor {
             if (ret !== undefined) {
               that.node.innerHTML = ret;
             }
-            setCaretPosition(that.node, offset);
+            try {
+              setCaretPosition(that.node, offset);
+            } catch (e) {
+              console.log(e);
+            }
             that.lastText = text;
             that.awaitingTransform = false;
           }
