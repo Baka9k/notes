@@ -5,10 +5,6 @@ export default class Notes {
   constructor (storageObj, storageKey='__todolist_data') {
     this.storage = storageObj;
     this.storageKey = storageKey;
-    // Для окончательной реализации надо сделать чтобы при каждой операции записи
-    // в хранилище записывалось JSON-представление, ну или каждые полсекунды проверялось
-    // поменялось ли что-то, и если поменялось то записывалось бы новое состояние
-    // Можно сделать что Если fromJSON - строка то она JSON-парсится и из неё загружается объект
     this.items = [];
     this.id = 0;
     

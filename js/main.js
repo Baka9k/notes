@@ -1,7 +1,14 @@
-
 import 'todolist.scss';
 
 import { $ } from 'Utilities';
+
+import Notes from 'Notes';
+
+import SearchBar from 'SearchBar';
+
+import NoteCreator from 'NoteCreator';
+
+import NoteView from 'NoteView';
 
 document.body.className = '';
 
@@ -13,9 +20,9 @@ window.notes = notes;
 
 function updateVisibility(shownNoteItems) {
   var shownIds = new Set(shownNoteItems.map( item => item.id ));
-  pr('shownIds', shownIds);
+  console.log('shownIds', shownIds);
   Object.keys(noteViews).forEach( (id) => {
-    pr(id, shownIds.has(id));
+    console.log(id, shownIds.has(id));
     noteViews[id].setVisibility(shownIds.has(id));
   });
 }
@@ -55,7 +62,7 @@ new NoteCreator(
   $('.list-elem:nth-child(1) > .list-text')[0],
   $('.list-elem:nth-child(1) > .list-tags')[0],
   function onNewNote(noteText, noteTags) {
-    pr('New note created:', noteText, noteTags);
+    console.log('New note created:', noteText, noteTags);
     
     var item = notes.add(noteText, noteTags);
     var note = createNoteView(item);

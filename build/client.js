@@ -67,8 +67,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var pr = console.log;
-
 	document.body.className = '';
 
 	var notes = new _Notes2.default(window.localStorage);
@@ -81,9 +79,9 @@
 	  var shownIds = new Set(shownNoteItems.map(function (item) {
 	    return item.id;
 	  }));
-	  pr('shownIds', shownIds);
+	  console.log('shownIds', shownIds);
 	  Object.keys(noteViews).forEach(function (id) {
-	    pr(id, shownIds.has(id));
+	    console.log(id, shownIds.has(id));
 	    noteViews[id].setVisibility(shownIds.has(id));
 	  });
 	}
@@ -109,7 +107,7 @@
 	});
 
 	new _NoteCreator2.default((0, _Utilities.$)('.list-elem:nth-child(1) > .action-create')[0], (0, _Utilities.$)('.list-elem:nth-child(1) > .list-text')[0], (0, _Utilities.$)('.list-elem:nth-child(1) > .list-tags')[0], function onNewNote(noteText, noteTags) {
-	  pr('New note created:', noteText, noteTags);
+	  console.log('New note created:', noteText, noteTags);
 
 	  var item = notes.add(noteText, noteTags);
 	  var note = createNoteView(item);
@@ -545,7 +543,6 @@
 
 	    this.storage = storageObj;
 	    this.storageKey = storageKey;
-
 	    this.items = [];
 	    this.id = 0;
 
