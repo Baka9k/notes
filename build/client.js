@@ -1,41 +1,42 @@
-/******/ (function(modules) {
-/******/
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
 /******/ 	var installedModules = {};
 
-/******/
+/******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 
-/******/
+/******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 
-/******/
+/******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
 
-/******/
+/******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
-/******/
+/******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 
-/******/
+/******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
 
-/******/
+
+/******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 
-/******/
+/******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/
+/******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "build/";
 
-/******/
+/******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
@@ -130,14 +131,17 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
 	var content = __webpack_require__(2);
 	if(typeof content === 'string') content = [[module.id, content, '']];
-
+	// add the styles to the DOM
 	var update = __webpack_require__(8)(content, {});
 	if(content.locals) module.exports = content.locals;
-
+	// Hot Module Replacement
 	if(false) {
-
+		// When the styles change, update the <style> tags
 		if(!content.locals) {
 			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./todolist.scss", function() {
 				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/sass-loader/index.js!./todolist.scss");
@@ -145,7 +149,7 @@
 				update(newContent);
 			});
 		}
-
+		// When the module is disposed, remove the <style> tags
 		module.hot.dispose(function() { update(); });
 	}
 
@@ -154,22 +158,28 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(3)();
+	// imports
 
-	exports.push([module.id, "/* ========= CSS Reset ========= */\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n/* =========== APP ============ */\n/* fonts */\n@font-face {\n  font-family: 'Material Icons';\n  font-style: normal;\n  font-weight: 400;\n  src: url(" + __webpack_require__(4) + ");\n  /* For IE6-8 */\n  src: local(\"Material Icons\"), local(\"MaterialIcons-Regular\"), url(" + __webpack_require__(5) + ") format(\"woff2\"), url(" + __webpack_require__(6) + ") format(\"woff\"), url(" + __webpack_require__(7) + ") format(\"truetype\"); }\n\n.material-icons {\n  font-family: 'Material Icons';\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;\n  /* Preferred icon size */\n  display: inline-block;\n  line-height: 1;\n  text-transform: none;\n  letter-spacing: normal;\n  word-wrap: normal;\n  white-space: nowrap;\n  direction: ltr;\n  /* Support for all WebKit browsers. */\n  -webkit-font-smoothing: antialiased;\n  /* Support for Safari and Chrome. */\n  text-rendering: optimizeLegibility;\n  /* Support for Firefox. */\n  -moz-osx-font-smoothing: grayscale;\n  /* Support for IE. */\n  font-feature-settings: 'liga'; }\n\n/* Custom app style */\nbody {\n  font-family: 'Roboto', sans-serif;\n  color: rgba(0, 0, 0, 0.87);\n  font-size: 16px;\n  background-color: #EEEEEE; }\n\n#todolist-root {\n  padding: 0px; }\n\n#filter {\n  margin-left: auto;\n  margin-right: auto;\n  border-radius: 4px;\n  width: 710px;\n  height: 30px;\n  background-color: rgba(255, 255, 255, 0.75); }\n\n#filter-edit {\n  float: left;\n  max-width: 600px;\n  min-width: 320px;\n  font-size: 20px;\n  padding-top: 4px;\n  padding-left: 3px;\n  height: 30px;\n  overflow-x: hidden;\n  overflow-y: auto;\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent; }\n\n#filter-edit:focus {\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent; }\n\n[contenteditable=true]:empty:before {\n  content: attr(placeholder);\n  display: block;\n  /* For Firefox */\n  color: #aaaaaa; }\n\n#filter [contenteditable=true]:empty:before {\n  color: #F9A825;\n  font-weight: 300; }\n\n#searchb, #clearb {\n  font-size: 24px;\n  color: #999;\n  border-radius: 4px;\n  padding: 3px;\n  background-color: transparent;\n  float: left; }\n\n#clearb {\n  float: right;\n  cursor: pointer; }\n\n.top-stripe {\n  background-color: #ffbb00;\n  height: 45px;\n  width: 100%;\n  padding-top: 15px;\n  -webkit-box-shadow: 0px 3px 4px -4px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 3px 4px -4px rgba(0, 0, 0, 0.75);\n  box-shadow: 0px 3px 4px -4px rgba(0, 0, 0, 0.75); }\n\n.list {\n  width: 720px;\n  padding: 6px 6px 1px 6px;\n  margin-left: auto;\n  margin-right: auto; }\n\n.list hr {\n  border: 0;\n  height: 1px;\n  background: #ddd;\n  margin-left: -14px;\n  margin-right: -14px;\n  width: inherit; }\n\n.list > .list-elem {\n  background-color: #FFFFFF;\n  color: rgba(0, 0, 0, 0.87);\n  display: block;\n  -webkit-font-smoothing: antialiased;\n  overflow-x: hidden;\n  overflow-y: auto;\n  border-radius: 2px;\n  -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);\n  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);\n  min-width: 320px;\n  margin-left: auto;\n  margin-right: auto;\n  margin-bottom: 12px;\n  margin-top: 10px;\n  padding: 14px;\n  min-height: 32px; }\n\n.list-text {\n  word-wrap: break-word;\n  -webkit-line-break: after-white-space;\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent;\n  margin-top: 4px;\n  margin-left: 0px;\n  font-size: 18px;\n  padding: 2px;\n  border-radius: 2px;\n  margin-bottom: 24px; }\n\n.list-tags {\n  margin-top: 4px;\n  margin-left: 2px;\n  font-size: 18px;\n  margin: 0;\n  padding: 10px 0 1px 0;\n  width: 60%;\n  position: relative;\n  float: left;\n  word-wrap: break-word;\n  -webkit-user-select: none;\n  user-select: none; }\n\n.tags-label {\n  width: 50px;\n  position: relative;\n  float: left;\n  padding: 10px 0 1px 0;\n  font-weight: 500;\n  color: #494949; }\n\n.utag {\n  background-color: #CCFF90;\n  padding: 3px;\n  padding-top: 1px;\n  border-radius: 3px;\n  -webkit-transition: all 0.45s;\n  -moz-transition: all 0.45s;\n  -o-transition: all 0.45s;\n  transition: all 0.45s; }\n\n.list-tags .utag:hover {\n  background-color: #B2FF59;\n  cursor: pointer; }\n\n.list-icon {\n  width: 26px;\n  height: 26px;\n  font-style: bold;\n  padding-top: 2px;\n  text-align: center;\n  display: inline-block;\n  margin-right: 2px;\n  -webkit-transition: all 0.45s;\n  -moz-transition: all 0.45s;\n  -o-transition: all 0.45s;\n  transition: all 0.45s; }\n\n.list-elem input {\n  height: 24px;\n  font-size: 18px;\n  flex: 3; }\n\n.action-create {\n  width: 100px;\n  position: relative;\n  float: right;\n  padding-top: 8px;\n  padding-bottom: 8px;\n  -webkit-user-select: none;\n  /* Chrome all / Safari all */\n  -moz-user-select: none;\n  /* Firefox all */\n  -ms-user-select: none;\n  /* IE 10+ */\n  user-select: none;\n  /* Likely future */\n  cursor: pointer;\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent;\n  background-color: #4285f4;\n  border: none;\n  overflow: hidden;\n  -webkit-border-radius: 3px;\n  border-radius: 3px;\n  font-family: 'Roboto', sans-serif;\n  color: #fff;\n  font-size: 14px;\n  font-weight: 500;\n  text-transform: uppercase;\n  display: inline-block;\n  text-align: center;\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2); }\n\n.action-edit, .action-remove {\n  -webkit-user-select: none;\n  /* Chrome all / Safari all */\n  -moz-user-select: none;\n  /* Firefox all */\n  -ms-user-select: none;\n  /* IE 10+ */\n  user-select: none;\n  /* Likely future */\n  cursor: pointer;\n  background-color: transparent;\n  font-size: 24px;\n  color: #999;\n  border-radius: 4px;\n  padding: 3px;\n  float: right; }\n\n.action-edit:hover, .action-remove:hover {\n  background: rgba(0, 0, 0, 0.1); }\n", ""]);
+
+	// module
+	exports.push([module.id, "/* ========= CSS Reset ========= */\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n/* =========== APP ============ */\n/* fonts */\n@font-face {\n  font-family: 'Material Icons';\n  font-style: normal;\n  font-weight: 400;\n  src: url(" + __webpack_require__(4) + ");\n  /* For IE6-8 */\n  src: local(\"Material Icons\"), local(\"MaterialIcons-Regular\"), url(" + __webpack_require__(5) + ") format(\"woff2\"), url(" + __webpack_require__(6) + ") format(\"woff\"), url(" + __webpack_require__(7) + ") format(\"truetype\"); }\n\n.material-icons {\n  font-family: 'Material Icons';\n  font-weight: normal;\n  font-style: normal;\n  font-size: 24px;\n  /* Preferred icon size */\n  display: inline-block;\n  line-height: 1;\n  text-transform: none;\n  letter-spacing: normal;\n  word-wrap: normal;\n  white-space: nowrap;\n  direction: ltr;\n  /* Support for all WebKit browsers. */\n  -webkit-font-smoothing: antialiased;\n  /* Support for Safari and Chrome. */\n  text-rendering: optimizeLegibility;\n  /* Support for Firefox. */\n  -moz-osx-font-smoothing: grayscale;\n  /* Support for IE. */\n  font-feature-settings: 'liga'; }\n\n/* Custom app style */\nbody {\n  font-family: 'Roboto', sans-serif;\n  color: rgba(0, 0, 0, 0.87);\n  font-size: 16px;\n  background-color: #EEEEEE; }\n\n#todolist-root {\n  padding: 0px; }\n\n#filter {\n  margin-left: auto;\n  margin-right: auto;\n  border-radius: 4px;\n  width: 710px;\n  height: 30px;\n  background-color: rgba(255, 255, 255, 0.75); }\n\n#filter-edit {\n  float: left;\n  max-width: 600px;\n  min-width: 320px;\n  font-size: 20px;\n  padding-top: 4px;\n  padding-left: 3px;\n  height: 30px;\n  overflow-x: hidden;\n  overflow-y: auto;\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent;\n  white-space: -moz-pre-wrap;\n  white-space: -pre-wrap;\n  white-space: -o-pre-wrap;\n  white-space: pre-wrap;\n  word-wrap: break-word; }\n\n#filter-edit:focus {\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent; }\n\n[contenteditable=true]:empty:before {\n  content: attr(placeholder);\n  display: block;\n  /* For Firefox */\n  color: #aaaaaa; }\n\n#filter [contenteditable=true]:empty:before {\n  color: #F9A825;\n  font-weight: 300; }\n\n#searchb, #clearb {\n  font-size: 24px;\n  color: #999;\n  border-radius: 4px;\n  padding: 3px;\n  background-color: transparent;\n  float: left; }\n\n#clearb {\n  float: right;\n  cursor: pointer; }\n\n.top-stripe {\n  background-color: #ffbb00;\n  height: 45px;\n  width: 100%;\n  padding-top: 15px;\n  -webkit-box-shadow: 0px 3px 4px -4px rgba(0, 0, 0, 0.75);\n  -moz-box-shadow: 0px 3px 4px -4px rgba(0, 0, 0, 0.75);\n  box-shadow: 0px 3px 4px -4px rgba(0, 0, 0, 0.75); }\n\n.list {\n  width: 720px;\n  padding: 6px 6px 1px 6px;\n  margin-left: auto;\n  margin-right: auto; }\n\n.list hr {\n  border: 0;\n  height: 1px;\n  background: #ddd;\n  margin-left: -14px;\n  margin-right: -14px;\n  width: inherit; }\n\n.list > .list-elem {\n  background-color: #FFFFFF;\n  color: rgba(0, 0, 0, 0.87);\n  display: block;\n  -webkit-font-smoothing: antialiased;\n  overflow-x: hidden;\n  overflow-y: auto;\n  border-radius: 2px;\n  -webkit-box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);\n  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);\n  min-width: 320px;\n  margin-left: auto;\n  margin-right: auto;\n  margin-bottom: 12px;\n  margin-top: 10px;\n  padding: 14px;\n  min-height: 32px; }\n\n.list-text {\n  white-space: -moz-pre-wrap;\n  white-space: -pre-wrap;\n  white-space: -o-pre-wrap;\n  white-space: pre-wrap;\n  word-wrap: break-word;\n  -webkit-line-break: after-white-space;\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent;\n  margin-top: 4px;\n  margin-left: 0px;\n  font-size: 18px;\n  padding: 2px;\n  border-radius: 2px;\n  margin-bottom: 24px; }\n\n.list-tags {\n  margin-top: 4px;\n  margin-left: 2px;\n  font-size: 18px;\n  margin: 0;\n  padding: 10px 0 1px 0;\n  width: 60%;\n  position: relative;\n  float: left;\n  word-wrap: break-word;\n  -webkit-user-select: none;\n  user-select: none; }\n\n.tags-label {\n  width: 50px;\n  position: relative;\n  float: left;\n  padding: 10px 0 1px 0;\n  font-weight: 500;\n  color: #494949; }\n\n.utag {\n  background-color: #CCFF90;\n  padding: 3px;\n  padding-top: 1px;\n  border-radius: 3px;\n  -webkit-transition: all 0.45s;\n  -moz-transition: all 0.45s;\n  -o-transition: all 0.45s;\n  transition: all 0.45s; }\n\n.list-tags .utag:hover {\n  background-color: #B2FF59;\n  cursor: pointer; }\n\n.list-icon {\n  width: 26px;\n  height: 26px;\n  font-style: bold;\n  padding-top: 2px;\n  text-align: center;\n  display: inline-block;\n  margin-right: 2px;\n  -webkit-transition: all 0.45s;\n  -moz-transition: all 0.45s;\n  -o-transition: all 0.45s;\n  transition: all 0.45s; }\n\n.list-elem input {\n  height: 24px;\n  font-size: 18px;\n  flex: 3; }\n\n.action-create {\n  width: 100px;\n  position: relative;\n  float: right;\n  padding-top: 8px;\n  padding-bottom: 8px;\n  -webkit-user-select: none;\n  /* Chrome all / Safari all */\n  -moz-user-select: none;\n  /* Firefox all */\n  -ms-user-select: none;\n  /* IE 10+ */\n  user-select: none;\n  /* Likely future */\n  cursor: pointer;\n  outline: none;\n  outline-style: none;\n  outline-width: 0px;\n  -webkit-tap-highlight-color: transparent;\n  background-color: #4285f4;\n  border: none;\n  overflow: hidden;\n  -webkit-border-radius: 3px;\n  border-radius: 3px;\n  font-family: 'Roboto', sans-serif;\n  color: #fff;\n  font-size: 14px;\n  font-weight: 500;\n  text-transform: uppercase;\n  display: inline-block;\n  text-align: center;\n  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2); }\n\n.action-edit, .action-remove {\n  -webkit-user-select: none;\n  /* Chrome all / Safari all */\n  -moz-user-select: none;\n  /* Firefox all */\n  -ms-user-select: none;\n  /* IE 10+ */\n  user-select: none;\n  /* Likely future */\n  cursor: pointer;\n  background-color: transparent;\n  font-size: 24px;\n  color: #999;\n  border-radius: 4px;\n  padding: 3px;\n  float: right; }\n\n.action-edit:hover, .action-remove:hover {\n  background: rgba(0, 0, 0, 0.1); }\n", ""]);
+
+	// exports
+
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
 	/*
-		MIT License http:
+		MIT License http://www.opensource.org/licenses/mit-license.php
 		Author Tobias Koppers @sokra
 	*/
-
+	// css base code, injected by the css-loader
 	module.exports = function() {
 		var list = [];
 
-
+		// return the list of modules as css string
 		list.toString = function toString() {
 			var result = [];
 			for(var i = 0; i < this.length; i++) {
@@ -183,7 +193,7 @@
 			return result.join("");
 		};
 
-
+		// import a list of modules into the list
 		list.i = function(modules, mediaQuery) {
 			if(typeof modules === "string")
 				modules = [[null, modules, ""]];
@@ -195,7 +205,10 @@
 			}
 			for(i = 0; i < modules.length; i++) {
 				var item = modules[i];
-
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
 				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
 					if(mediaQuery && !item[2]) {
 						item[2] = mediaQuery;
@@ -208,6 +221,7 @@
 		};
 		return list;
 	};
+
 
 /***/ },
 /* 4 */
@@ -238,7 +252,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
-		MIT License http:
+		MIT License http://www.opensource.org/licenses/mit-license.php
 		Author Tobias Koppers @sokra
 	*/
 	var stylesInDom = {},
@@ -265,10 +279,11 @@
 		}
 
 		options = options || {};
-
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
 		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
 
-
+		// By default, add <style> tags to the bottom of <head>.
 		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
 
 		var styles = listToStyles(list);
@@ -469,7 +484,7 @@
 		var sourceMap = obj.sourceMap;
 
 		if(sourceMap) {
-
+			// http://stackoverflow.com/a/26603875
 			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
 		}
 
@@ -482,6 +497,7 @@
 		if(oldSrc)
 			URL.revokeObjectURL(oldSrc);
 	}
+
 
 /***/ },
 /* 9 */
@@ -505,6 +521,7 @@
 	    }
 	}
 
+	// ObjTest should have every property of objSrc
 	function hasProps(objSrc, objTest) {
 	    var ret = true;
 	    Object.keys(objSrc).forEach(function (prop) {
@@ -679,7 +696,7 @@
 	    this.editor = new _DivEditor2.default({
 	      domNode: domDiv,
 	      transformText: function transformText(text) {
-
+	        //console.log('transformText:', text);
 	        that.tags = {};
 	        var tagsHTML = text.replace(tagRE, function (tag) {
 	          that.tags[tag] = true;
@@ -690,12 +707,14 @@
 	      }
 	    });
 
+	    // Clear all filters
 	    domClearB.onclick = function () {
 	      _this.tags = {};
 	      _this.editable.innerHTML = '';
 	      _this.onTagUpdate && _this.onTagUpdate(_this.tags);
 	    };
 
+	    // Clicking on tag triggers removal of tag and onTagUpdate()
 	    this.editable.onclick = function (event) {
 	      if (event.target && event.target.className === 'utag') {
 	        that.editable.removeChild(event.target);
@@ -739,6 +758,13 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	//var editor = new DivEditor({
+	// domNode: DOM node which will be editable
+	// onEdit: function or undefined
+	// transformText: function or undefined <-- Will be called every 50 ms and allowed
+	// to transform domNode's HTML, given domNode's textContent. Use this for fancy highlighting
+	// detachOnBlur: function or undefined });
+
 	var DivEditor = function () {
 	  function DivEditor(config) {
 	    _classCallCheck(this, DivEditor);
@@ -759,6 +785,7 @@
 	    this.oneditCb = function (event) {
 	      that.onEdit && that.onEdit.call(that, that.node.textContent);
 
+	      // Delay text transform for transformLatency milliseconds
 	      if (that.transformText && !that.awaitingTransform) {
 	        that.awaitingTransform = true;
 	        that.timeout = setTimeout(function () {
@@ -794,6 +821,9 @@
 	      };
 	    }
 	  }
+
+	  // Call this to trigger transformText, i.e if you changed editor DOM
+
 
 	  _createClass(DivEditor, [{
 	    key: 'triggerTransform',
@@ -864,28 +894,31 @@
 	  var range = document.createRange();
 	  var sel = window.getSelection();
 
+	  //select appropriate node
 	  var currentNode = null;
 	  var previousNode = null;
 
 	  for (var i = 0; i < element.childNodes.length; i++) {
-
+	    //save previous node
 	    previousNode = currentNode;
 
+	    //get current node
 	    currentNode = element.childNodes[i];
-
+	    //if we get span or something else then we should get child node
 	    while (currentNode.childNodes.length > 0) {
 	      currentNode = currentNode.childNodes[0];
 	    }
 
+	    //calc offset in current node
 	    if (previousNode != null) {
 	      offset -= previousNode.length;
 	    }
-
+	    //check whether current node has enough length
 	    if (offset <= currentNode.length) {
 	      break;
 	    }
 	  }
-
+	  //move caret to specified offset
 	  if (currentNode != null) {
 	    range.setStart(currentNode, offset);
 	    range.collapse(true);
@@ -1068,6 +1101,7 @@
 	        }
 	      };
 
+	      // Insert our element into DOM
 	      if (insertAfterDOM) {
 	        domList.insertBefore(domNode, insertAfterDOM.nextSibling);
 	      } else {

@@ -129,6 +129,11 @@ body {
 	outline-style: none;
 	outline-width: 0px;
 	-webkit-tap-highlight-color: transparent;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 #filter-edit:focus {
     outline: none;
@@ -217,6 +222,10 @@ body {
 
 .list-text {
     
+    white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: pre-wrap;
     word-wrap: break-word;
     -webkit-line-break: after-white-space;
     
