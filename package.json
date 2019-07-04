@@ -27,7 +27,7 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.6.0",
     "webpack": "^1.13.3",
-    "snyk": "^1.42.6"
+    "snyk": "^1.189.0"
   },
   "repository": {
     "type": "git",
